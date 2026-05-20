@@ -7,6 +7,9 @@ const emptyState = document.querySelector("#emptyState");
 const canvasFrame = document.querySelector(".canvas-frame");
 const formatSelect = document.querySelector("#formatSelect");
 const formatNote = document.querySelector("#formatNote");
+const imageFitSelect = document.querySelector("#imageFitSelect");
+const comboLayoutSelect = document.querySelector("#comboLayoutSelect");
+const comboLayoutGroup = document.querySelector("#comboLayoutGroup");
 const shapeSelect = document.querySelector("#shapeSelect");
 const shapeColor = document.querySelector("#shapeColor");
 const shapeHex = document.querySelector("#shapeHex");
@@ -129,6 +132,8 @@ function readValues() {
     shape: shapeSelect.value,
     shapeColor: shapeColor.value,
     backgroundColor: backgroundColor.value,
+    imageFit: imageFitSelect ? imageFitSelect.value : "cover-center",
+    comboLayout: comboLayoutSelect ? comboLayoutSelect.value : "top",
   };
 }
 
@@ -190,26 +195,40 @@ function createRandom(seed) {
   };
 }
 
-function coverRect(image, targetWidth, targetHeight) {
+function calculateImageRect(image, targetWidth, targetHeight, fitMode = "cover-center") {
   const imageRatio = image.width / image.height;
   const targetRatio = targetWidth / targetHeight;
   let width = targetWidth;
   let height = targetHeight;
+  
+  const isCover = fitMode.startsWith("cover");
+  const align = fitMode.split("-")[1];
 
-  if (imageRatio > targetRatio) {
-    height = targetHeight;
-    width = height * imageRatio;
+  if (isCover) {
+    if (imageRatio > targetRatio) {
+      height = targetHeight;
+      width = height * imageRatio;
+    } else {
+      width = targetWidth;
+      height = width / imageRatio;
+    }
   } else {
-    width = targetWidth;
-    height = width / imageRatio;
+    if (imageRatio > targetRatio) {
+      width = targetWidth;
+      height = width / imageRatio;
+    } else {
+      height = targetHeight;
+      width = height * imageRatio;
+    }
   }
 
-  return {
-    x: (targetWidth - width) / 2,
-    y: (targetHeight - height) / 2,
-    width,
-    height,
-  };
+  let x = (targetWidth - width) / 2;
+  let y = (targetHeight - height) / 2;
+
+  if (align === "top") y = 0;
+  if (align === "bottom") y = targetHeight - height;
+
+  return { x, y, width, height };
 }
 
 function makePattern(values) {
@@ -335,7 +354,8 @@ function drawSingleShape(context, item, values, fillStyle) {
 
 function drawPhoto(context) {
   if (!state.image) return;
-  const rect = coverRect(state.image, canvas.width, canvas.height);
+  const values = readValues();
+  const rect = calculateImageRect(state.image, canvas.width, canvas.height, values.imageFit);
   context.drawImage(state.image, rect.x, rect.y, rect.width, rect.height);
 }
 
@@ -378,27 +398,39 @@ function drawCutoutLayer(values, pattern, bounds = null) {
 
 function drawComboComposition(values, pattern) {
   const splitY = Math.round(canvas.height * 0.52);
-  const topBounds = {
-    x: 0,
-    y: 0,
-    width: canvas.width,
-    height: splitY,
-  };
-  const bottomBounds = {
-    x: 0,
-    y: splitY,
-    width: canvas.width,
-    height: canvas.height - splitY,
+  let cutoutBounds, bottomBounds;
+
+  if (values.comboLayout === "top") {
+    cutoutBounds = { x: 0, y: 0, width: canvas.width, height: splitY };
+    bottomBounds = { x: 0, y: splitY, width: canvas.width, height: canvas.height - splitY };
+  } else if (values.comboLayout === "bottom") {
+    cutoutBounds = { x: 0, y: canvas.height - splitY, width: canvas.width, height: splitY };
+    bottomBounds = { x: 0, y: 0, width: canvas.width, height: canvas.height - splitY };
+  } else if (values.comboLayout === "center") {
+    const margin = Math.round(canvas.height * 0.24);
+    cutoutBounds = { x: 0, y: margin, width: canvas.width, height: canvas.height - margin * 2 };
+    bottomBounds = [
+      { x: 0, y: 0, width: canvas.width, height: margin },
+      { x: 0, y: canvas.height - margin, width: canvas.width, height: margin }
+    ];
+  }
+
+  drawCutoutLayer(values, pattern, cutoutBounds);
+
+  const drawShapesOnBounds = (bounds) => {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+    ctx.clip();
+    pattern.forEach((item) => drawSingleShape(ctx, item, values, values.shapeColor));
+    ctx.restore();
   };
 
-  drawCutoutLayer(values, pattern, topBounds);
-
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(bottomBounds.x, bottomBounds.y, bottomBounds.width, bottomBounds.height);
-  ctx.clip();
-  pattern.forEach((item) => drawSingleShape(ctx, item, values, values.shapeColor));
-  ctx.restore();
+  if (Array.isArray(bottomBounds)) {
+    bottomBounds.forEach(drawShapesOnBounds);
+  } else {
+    drawShapesOnBounds(bottomBounds);
+  }
 }
 
 function render() {
@@ -439,6 +471,10 @@ function setMode(mode) {
   document
     .querySelectorAll(".segmented button")
     .forEach((item) => item.classList.toggle("active", item.dataset.mode === mode));
+    
+  if (comboLayoutGroup) {
+    comboLayoutGroup.style.display = mode === "combo" ? "grid" : "none";
+  }
 
   if (mode === "combo" && !wasCombo) {
     shapeSelect.value = "circle";
@@ -613,8 +649,9 @@ document.querySelectorAll("[data-preset]").forEach((button) => {
   button.addEventListener("click", () => applyPreset(button.dataset.preset));
 });
 
-[shapeSelect, ...Object.values(controls)].forEach(
+[shapeSelect, imageFitSelect, comboLayoutSelect, ...Object.values(controls)].forEach(
   (element) => {
+    if (!element) return;
     element.addEventListener("input", () => {
       drawCustomPreview();
       render();

@@ -56,6 +56,27 @@
             </div>
 
             <div class="control-group">
+              <label class="control-label" for="imageFitSelect">Posisi foto</label>
+              <select id="imageFitSelect">
+                <option value="cover-center">Fill (Tengah)</option>
+                <option value="cover-top">Fill (Atas)</option>
+                <option value="cover-bottom">Fill (Bawah)</option>
+                <option value="contain-center">Fit (Tengah)</option>
+                <option value="contain-top">Fit (Atas)</option>
+                <option value="contain-bottom">Fit (Bawah)</option>
+              </select>
+            </div>
+
+            <div class="control-group" id="comboLayoutGroup" style="display: none;">
+              <label class="control-label" for="comboLayoutSelect">Layout gabung</label>
+              <select id="comboLayoutSelect">
+                <option value="top">Cutout di Atas</option>
+                <option value="center">Cutout di Tengah</option>
+                <option value="bottom">Cutout di Bawah</option>
+              </select>
+            </div>
+
+            <div class="control-group">
               <label class="control-label" for="shapeSelect">Shape</label>
               <select id="shapeSelect">
                 <option value="burst">Burst</option>
