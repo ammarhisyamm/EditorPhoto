@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shape Photo Editor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="editor-panel" aria-label="Editor foto">
+        <div class="topbar">
+          <div>
+            <p class="eyebrow">Photo Shape Editor</p>
+            <h1>Upload foto, bentuk pattern, ubah warna.</h1>
+          </div>
+          <div class="actions">
+            <label
+              class="upload-btn"
+              for="photoInput"
+              role="button"
+              tabindex="0"
+              aria-label="Upload foto"
+            >
+              <span aria-hidden="true">+</span>
+              Upload
+            </label>
+            <input id="photoInput" type="file" accept="image/*" />
+            <button id="downloadBtn" type="button" disabled>Download PNG</button>
+          </div>
+        </div>
+
+        <div class="workspace">
+          <aside class="controls" aria-label="Pengaturan editor">
+            <div class="control-group">
+              <span class="control-label">Mode edit</span>
+              <div class="segmented" role="group" aria-label="Mode komposisi">
+                <button class="active" data-mode="stickers" type="button">Stiker</button>
+                <button data-mode="cutout" type="button">Cutout</button>
+                <button data-mode="combo" type="button">Gabung</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="formatSelect">Format output</label>
+              <select id="formatSelect">
+                <option value="portrait">Portrait 4:5</option>
+                <option value="landscape">Landscape 5:4</option>
+                <option value="ratio-3-4">Portrait 3:4</option>
+                <option value="ratio-4-3">Landscape 4:3</option>
+                <option value="square">Square 1:1</option>
+                <option value="story">Story 9:16</option>
+                <option value="wide">Wide 16:9</option>
+              </select>
+              <p class="format-note" id="formatNote">900 x 1125 px</p>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="shapeSelect">Shape</label>
+              <select id="shapeSelect">
+                <option value="burst">Burst</option>
+                <option value="star">Star</option>
+                <option value="sparkle">Sparkle</option>
+                <option value="flower">Flower</option>
+                <option value="circle">Circle</option>
+                <option value="diamond">Diamond</option>
+                <option value="heart">Heart</option>
+                <option value="custom">Custom draw</option>
+              </select>
+            </div>
+
+            <div class="control-grid">
+              <label class="color-control">
+                <span>Warna shape</span>
+                <div class="color-row">
+                  <input id="shapeColor" type="color" value="#ff4b00" />
+                  <input
+                    id="shapeHex"
+                    class="hex-input"
+                    type="text"
+                    value="#ff4b00"
+                    inputmode="text"
+                    maxlength="7"
+                    aria-label="Hex warna shape"
+                  />
+                </div>
+              </label>
+              <label class="color-control">
+                <span>Warna latar</span>
+                <div class="color-row">
+                  <input id="backgroundColor" type="color" value="#ff4b00" />
+                  <input
+                    id="backgroundHex"
+                    class="hex-input"
+                    type="text"
+                    value="#ff4b00"
+                    inputmode="text"
+                    maxlength="7"
+                    aria-label="Hex warna latar"
+                  />
+                </div>
+              </label>
+            </div>
+
+            <div class="sliders">
+              <label>
+                <span>Jumlah <strong id="countValue">18</strong></span>
+                <input id="countRange" type="range" min="1" max="80" value="18" />
+              </label>
+              <label>
+                <span>Ukuran <strong id="sizeValue">70</strong></span>
+                <input id="sizeRange" type="range" min="20" max="180" value="70" />
+              </label>
+              <label>
+                <span>Opacity <strong id="opacityValue">100%</strong></span>
+                <input id="opacityRange" type="range" min="15" max="100" value="100" />
+              </label>
+              <label>
+                <span>Rotasi acak <strong id="rotationValue">35</strong></span>
+                <input id="rotationRange" type="range" min="0" max="180" value="35" />
+              </label>
+              <label>
+                <span>Points <strong id="pointsValue">12</strong></span>
+                <input id="pointsRange" type="range" min="3" max="24" value="12" />
+              </label>
+              <label>
+                <span>Seed <strong id="seedValue">9</strong></span>
+                <input id="seedRange" type="range" min="1" max="99" value="9" />
+              </label>
+            </div>
+
+            <div class="control-group custom-drawer" id="customDrawer">
+              <div class="drawer-heading">
+                <span class="control-label">Custom shape</span>
+                <button id="clearCustomBtn" type="button">Reset</button>
+              </div>
+              <canvas id="shapePad" width="180" height="180" aria-label="Area gambar custom shape"></canvas>
+              <p>Gambar outline shape di kotak ini. Lepas kursor untuk menyimpan.</p>
+            </div>
+
+            <div class="control-group">
+              <span class="control-label">Preset cepat</span>
+              <div class="preset-row">
+                <button data-preset="reference" type="button">Referensi</button>
+                <button data-preset="soft" type="button">Soft</button>
+                <button data-preset="dense" type="button">Padat</button>
+              </div>
+            </div>
+          </aside>
+
+          <section class="stage-wrap" aria-label="Preview foto">
+            <div class="canvas-frame">
+              <canvas id="editorCanvas" width="900" height="1125"></canvas>
+              <div id="emptyState" class="empty-state">
+                <span>+</span>
+                <p>Upload foto untuk mulai edit</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
