@@ -453,6 +453,50 @@ function setMode(mode) {
 
 
 
+function extractDominantColors(img) {
+  const c = document.createElement("canvas");
+  const cx = c.getContext("2d");
+  c.width = 64;
+  c.height = 64;
+  cx.drawImage(img, 0, 0, 64, 64);
+  const data = cx.getImageData(0, 0, 64, 64).data;
+  const bins = {};
+  
+  for (let i = 0; i < data.length; i += 16) {
+    if (data[i + 3] < 128) continue;
+    const r = Math.round(data[i] / 32) * 32;
+    const g = Math.round(data[i + 1] / 32) * 32;
+    const b = Math.round(data[i + 2] / 32) * 32;
+    const key = `${r},${g},${b}`;
+    bins[key] = (bins[key] || 0) + 1;
+  }
+  
+  const sorted = Object.entries(bins).sort((a, b) => b[1] - a[1]);
+  if (sorted.length === 0) return ["#ffffff", "#000000"];
+  
+  const parseKey = (key) => key.split(",").map(Number);
+  const rgbToHex = (r, g, b) =>
+    "#" + [r, g, b].map((x) => Math.min(255, x).toString(16).padStart(2, "0")).join("");
+    
+  const color1 = parseKey(sorted[0][0]);
+  let color2 = color1;
+  
+  for (let i = 1; i < sorted.length; i++) {
+    const rgb = parseKey(sorted[i][0]);
+    const dist = Math.abs(rgb[0] - color1[0]) + Math.abs(rgb[1] - color1[1]) + Math.abs(rgb[2] - color1[2]);
+    if (dist > 100) {
+      color2 = rgb;
+      break;
+    }
+  }
+  
+  if (color2 === color1) {
+    color2 = [255 - color1[0], 255 - color1[1], 255 - color1[2]];
+  }
+  
+  return [rgbToHex(...color1), rgbToHex(...color2)];
+}
+
 function loadImage(file) {
   if (!file || !file.type.startsWith("image/")) return;
 
@@ -461,6 +505,11 @@ function loadImage(file) {
     const image = new Image();
     image.onload = () => {
       state.image = image;
+      const [bgHex, shapeHexColor] = extractDominantColors(image);
+      backgroundColor.value = bgHex;
+      shapeColor.value = shapeHexColor;
+      syncHexInput(backgroundColor, backgroundHex);
+      syncHexInput(shapeColor, shapeHex);
       render();
     };
     image.src = reader.result;
