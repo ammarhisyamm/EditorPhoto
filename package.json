@@ -1,0 +1,23 @@
+{
+  "name": "editor-photo",
+  "version": "1.0.0",
+  "description": "Shape Photo Editor - Turn any photo into a seamless pattern instantly",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ammarhisyamm/EditorPhoto.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ammarhisyamm/EditorPhoto/issues"
+  },
+  "homepage": "https://github.com/ammarhisyamm/EditorPhoto#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
