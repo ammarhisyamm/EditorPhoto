@@ -371,6 +371,7 @@ input[type="range"] {
   color: var(--deep);
   text-align: center;
   background: linear-gradient(180deg, #dff3fb, #fff7f1);
+  cursor: pointer;
 }
 
 .empty-state.hidden {

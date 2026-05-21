@@ -82,44 +82,7 @@ const formats = {
   },
 };
 
-const presets = {
-  reference: {
-    mode: "stickers",
-    shape: "burst",
-    shapeColor: "#ff4b00",
-    backgroundColor: "#ff4b00",
-    count: 18,
-    size: 70,
-    opacity: 100,
-    rotation: 35,
-    points: 12,
-    seed: 9,
-  },
-  soft: {
-    mode: "combo",
-    shape: "circle",
-    shapeColor: "#ff7a3d",
-    backgroundColor: "#ff7a3d",
-    count: 54,
-    size: 92,
-    opacity: 68,
-    rotation: 0,
-    points: 12,
-    seed: 24,
-  },
-  dense: {
-    mode: "combo",
-    shape: "circle",
-    shapeColor: "#ff6f32",
-    backgroundColor: "#ff6f32",
-    count: 76,
-    size: 82,
-    opacity: 72,
-    rotation: 0,
-    points: 12,
-    seed: 48,
-  },
-};
+
 
 function readValues() {
   return {
@@ -450,6 +413,9 @@ function render() {
   downloadBtn.disabled = false;
   emptyState.classList.add("hidden");
 
+  ctx.fillStyle = values.backgroundColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   drawPhoto(ctx);
 
   if (state.mode === "combo") {
@@ -485,20 +451,7 @@ function setMode(mode) {
   }
 }
 
-function applyPreset(name) {
-  const preset = presets[name];
-  if (!preset) return;
-  setMode(preset.mode);
-  shapeSelect.value = preset.shape;
-  shapeColor.value = preset.shapeColor;
-  backgroundColor.value = preset.backgroundColor;
-  syncHexInput(shapeColor, shapeHex);
-  syncHexInput(backgroundColor, backgroundHex);
-  Object.entries(controls).forEach(([key, element]) => {
-    element.value = preset[key];
-  });
-  render();
-}
+
 
 function loadImage(file) {
   if (!file || !file.type.startsWith("image/")) return;
@@ -645,9 +598,7 @@ document.querySelectorAll(".segmented button").forEach((button) => {
   });
 });
 
-document.querySelectorAll("[data-preset]").forEach((button) => {
-  button.addEventListener("click", () => applyPreset(button.dataset.preset));
-});
+
 
 [shapeSelect, imageFitSelect, comboLayoutSelect, ...Object.values(controls)].forEach(
   (element) => {
@@ -754,6 +705,10 @@ emptyState.addEventListener("dragover", (event) => {
 emptyState.addEventListener("drop", (event) => {
   event.preventDefault();
   loadImage(event.dataTransfer.files[0]);
+});
+
+emptyState.addEventListener("click", () => {
+  photoInput.click();
 });
 
 window.addEventListener("resize", updatePreviewFit);
