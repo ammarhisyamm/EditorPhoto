@@ -448,6 +448,7 @@ function setMode(mode) {
     controls.size.value = 92;
     controls.opacity.value = 68;
     controls.rotation.value = 0;
+    if (typeof paintAllSliders === "function") paintAllSliders();
   }
 }
 
@@ -762,8 +763,27 @@ emptyState.addEventListener("click", () => {
 
 window.addEventListener("resize", updatePreviewFit);
 
+/* ── Slider track fill ─────────────────────────────── */
+function paintSliderTrack(input) {
+  const min = Number(input.min) || 0;
+  const max = Number(input.max) || 100;
+  const val = Number(input.value);
+  const pct = ((val - min) / (max - min)) * 100;
+  input.style.background =
+    `linear-gradient(to right, #ff4b00 ${pct}%, #ece9e3 ${pct}%)`;
+}
+
+function paintAllSliders() {
+  document.querySelectorAll('input[type="range"]').forEach(paintSliderTrack);
+}
+
+document.querySelectorAll('input[type="range"]').forEach((input) => {
+  input.addEventListener("input", () => paintSliderTrack(input));
+});
+
 drawCustomPreview();
 applyFormat(formatSelect.value);
+paintAllSliders();
 render();
 
 if (new URLSearchParams(window.location.search).get("demo") === "1") {

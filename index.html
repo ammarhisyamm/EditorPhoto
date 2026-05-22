@@ -28,111 +28,117 @@
 
       <div class="workspace">
         <aside class="controls" aria-label="Editor settings">
-          <div class="control-group">
-            <span class="control-label">Edit mode</span>
-            <div class="segmented" role="group" aria-label="Composition mode">
-              <button class="active" data-mode="stickers" type="button">Stickers</button>
-              <button data-mode="cutout" type="button">Cutout</button>
-              <button data-mode="combo" type="button">Combo</button>
+          <div class="floating-card">
+            <div class="control-group">
+              <span class="control-label">Edit mode</span>
+              <div class="segmented" role="group" aria-label="Composition mode">
+                <button class="active" data-mode="stickers" type="button">Stickers</button>
+                <button data-mode="cutout" type="button">Cutout</button>
+                <button data-mode="combo" type="button">Combo</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="formatSelect">Output format</label>
+              <select id="formatSelect">
+                <option value="portrait">Portrait 4:5</option>
+                <option value="landscape">Landscape 5:4</option>
+                <option value="ratio-3-4">Portrait 3:4</option>
+                <option value="ratio-4-3">Landscape 4:3</option>
+                <option value="square">Square 1:1</option>
+                <option value="story">Story 9:16</option>
+                <option value="wide">Wide 16:9</option>
+              </select>
+              <p class="format-note" id="formatNote">900 x 1125 px</p>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="imageFitSelect">Photo position</label>
+              <select id="imageFitSelect">
+                <option value="cover-center">Fill (Center)</option>
+                <option value="cover-top">Fill (Top)</option>
+                <option value="cover-bottom">Fill (Bottom)</option>
+                <option value="contain-center">Fit (Center)</option>
+                <option value="contain-top">Fit (Top)</option>
+                <option value="contain-bottom">Fit (Bottom)</option>
+              </select>
+            </div>
+
+            <div class="control-group" id="comboLayoutGroup" style="display: none;">
+              <label class="control-label" for="comboLayoutSelect">Combo layout</label>
+              <select id="comboLayoutSelect">
+                <option value="top">Cutout at Top</option>
+                <option value="center">Cutout at Center</option>
+                <option value="bottom">Cutout at Bottom</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="shapeSelect">Shape</label>
+              <select id="shapeSelect">
+                <option value="burst">Burst</option>
+                <option value="star">Star</option>
+                <option value="sparkle">Sparkle</option>
+                <option value="flower">Flower</option>
+                <option value="circle">Circle</option>
+                <option value="diamond">Diamond</option>
+                <option value="heart">Heart</option>
+                <option value="custom">Custom draw</option>
+              </select>
             </div>
           </div>
 
-          <div class="control-group">
-            <label class="control-label" for="formatSelect">Output format</label>
-            <select id="formatSelect">
-              <option value="portrait">Portrait 4:5</option>
-              <option value="landscape">Landscape 5:4</option>
-              <option value="ratio-3-4">Portrait 3:4</option>
-              <option value="ratio-4-3">Landscape 4:3</option>
-              <option value="square">Square 1:1</option>
-              <option value="story">Story 9:16</option>
-              <option value="wide">Wide 16:9</option>
-            </select>
-            <p class="format-note" id="formatNote">900 x 1125 px</p>
+          <div class="floating-card">
+            <div class="control-grid">
+              <label class="color-control">
+                <span>Shape color</span>
+                <div class="color-row">
+                  <input id="shapeColor" type="color" value="#ff4b00" />
+                  <input id="shapeHex" class="hex-input" type="text" value="#ff4b00" inputmode="text" maxlength="7"
+                    aria-label="Shape color hex" />
+                </div>
+              </label>
+              <label class="color-control">
+                <span>Background color</span>
+                <div class="color-row">
+                  <input id="backgroundColor" type="color" value="#ff4b00" />
+                  <input id="backgroundHex" class="hex-input" type="text" value="#ff4b00" inputmode="text" maxlength="7"
+                    aria-label="Background color hex" />
+                </div>
+              </label>
+            </div>
           </div>
 
-          <div class="control-group">
-            <label class="control-label" for="imageFitSelect">Photo position</label>
-            <select id="imageFitSelect">
-              <option value="cover-center">Fill (Center)</option>
-              <option value="cover-top">Fill (Top)</option>
-              <option value="cover-bottom">Fill (Bottom)</option>
-              <option value="contain-center">Fit (Center)</option>
-              <option value="contain-top">Fit (Top)</option>
-              <option value="contain-bottom">Fit (Bottom)</option>
-            </select>
+          <div class="floating-card">
+            <div class="sliders">
+              <label>
+                <span>Amount <strong id="countValue">18</strong></span>
+                <input id="countRange" type="range" min="1" max="80" value="18" />
+              </label>
+              <label>
+                <span>Size <strong id="sizeValue">70</strong></span>
+                <input id="sizeRange" type="range" min="20" max="180" value="70" />
+              </label>
+              <label>
+                <span>Opacity <strong id="opacityValue">100%</strong></span>
+                <input id="opacityRange" type="range" min="15" max="100" value="100" />
+              </label>
+              <label>
+                <span>Random rotation <strong id="rotationValue">35</strong></span>
+                <input id="rotationRange" type="range" min="0" max="180" value="35" />
+              </label>
+              <label>
+                <span>Points <strong id="pointsValue">12</strong></span>
+                <input id="pointsRange" type="range" min="3" max="24" value="12" />
+              </label>
+              <label>
+                <span>Seed <strong id="seedValue">9</strong></span>
+                <input id="seedRange" type="range" min="1" max="99" value="9" />
+              </label>
+            </div>
           </div>
 
-          <div class="control-group" id="comboLayoutGroup" style="display: none;">
-            <label class="control-label" for="comboLayoutSelect">Combo layout</label>
-            <select id="comboLayoutSelect">
-              <option value="top">Cutout at Top</option>
-              <option value="center">Cutout at Center</option>
-              <option value="bottom">Cutout at Bottom</option>
-            </select>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="shapeSelect">Shape</label>
-            <select id="shapeSelect">
-              <option value="burst">Burst</option>
-              <option value="star">Star</option>
-              <option value="sparkle">Sparkle</option>
-              <option value="flower">Flower</option>
-              <option value="circle">Circle</option>
-              <option value="diamond">Diamond</option>
-              <option value="heart">Heart</option>
-              <option value="custom">Custom draw</option>
-            </select>
-          </div>
-
-          <div class="control-grid">
-            <label class="color-control">
-              <span>Shape color</span>
-              <div class="color-row">
-                <input id="shapeColor" type="color" value="#ff4b00" />
-                <input id="shapeHex" class="hex-input" type="text" value="#ff4b00" inputmode="text" maxlength="7"
-                  aria-label="Shape color hex" />
-              </div>
-            </label>
-            <label class="color-control">
-              <span>Background color</span>
-              <div class="color-row">
-                <input id="backgroundColor" type="color" value="#ff4b00" />
-                <input id="backgroundHex" class="hex-input" type="text" value="#ff4b00" inputmode="text" maxlength="7"
-                  aria-label="Background color hex" />
-              </div>
-            </label>
-          </div>
-
-          <div class="sliders">
-            <label>
-              <span>Amount <strong id="countValue">18</strong></span>
-              <input id="countRange" type="range" min="1" max="80" value="18" />
-            </label>
-            <label>
-              <span>Size <strong id="sizeValue">70</strong></span>
-              <input id="sizeRange" type="range" min="20" max="180" value="70" />
-            </label>
-            <label>
-              <span>Opacity <strong id="opacityValue">100%</strong></span>
-              <input id="opacityRange" type="range" min="15" max="100" value="100" />
-            </label>
-            <label>
-              <span>Random rotation <strong id="rotationValue">35</strong></span>
-              <input id="rotationRange" type="range" min="0" max="180" value="35" />
-            </label>
-            <label>
-              <span>Points <strong id="pointsValue">12</strong></span>
-              <input id="pointsRange" type="range" min="3" max="24" value="12" />
-            </label>
-            <label>
-              <span>Seed <strong id="seedValue">9</strong></span>
-              <input id="seedRange" type="range" min="1" max="99" value="9" />
-            </label>
-          </div>
-
-          <div class="control-group custom-drawer" id="customDrawer">
+          <div class="floating-card custom-drawer" id="customDrawer">
             <div class="drawer-heading">
               <span class="control-label">Custom shape</span>
               <button id="clearCustomBtn" type="button">Reset</button>
@@ -140,8 +146,6 @@
             <canvas id="shapePad" width="180" height="180" aria-label="Custom shape drawing area"></canvas>
             <p>Draw a shape outline in this box. Release cursor to save.</p>
           </div>
-
-
         </aside>
 
         <section class="stage-wrap" aria-label="Photo preview">
