@@ -28,7 +28,13 @@
 
       <div class="workspace">
         <aside class="controls" aria-label="Editor settings">
-          <div class="floating-card">
+          <div class="mobile-tabs" role="tablist">
+            <button class="mobile-tab active" data-tab="mode" role="tab" aria-selected="true">Mode</button>
+            <button class="mobile-tab" data-tab="colors" role="tab" aria-selected="false">Colors</button>
+            <button class="mobile-tab" data-tab="pattern" role="tab" aria-selected="false">Pattern</button>
+            <button class="mobile-tab" data-tab="more" role="tab" aria-selected="false">More</button>
+          </div>
+          <div class="floating-card tab-content" data-tab="mode">
             <div class="control-group">
               <span class="control-label">Edit mode</span>
               <div class="segmented" role="group" aria-label="Composition mode">
@@ -50,6 +56,12 @@
                 <option value="wide">Wide 16:9</option>
               </select>
               <p class="format-note" id="formatNote">900 x 1125 px</p>
+              <div class="presets-row">
+                <button class="preset-btn" data-preset="story" type="button">Story</button>
+                <button class="preset-btn" data-preset="square" type="button">Square</button>
+                <button class="preset-btn" data-preset="portrait" type="button">Portrait</button>
+                <button class="preset-btn" data-preset="wide" type="button">Wide</button>
+              </div>
             </div>
 
             <div class="control-group">
@@ -88,7 +100,7 @@
             </div>
           </div>
 
-          <div class="floating-card">
+          <div class="floating-card tab-content" data-tab="colors">
             <div class="control-grid">
               <label class="color-control">
                 <span>Shape color</span>
@@ -109,7 +121,7 @@
             </div>
           </div>
 
-          <div class="floating-card">
+          <div class="floating-card tab-content" data-tab="pattern">
             <div class="sliders">
               <label>
                 <span>Amount <strong id="countValue">18</strong></span>
@@ -136,9 +148,10 @@
                 <input id="seedRange" type="range" min="1" max="99" value="9" />
               </label>
             </div>
+            <button id="randomizeBtn" type="button" class="randomize-btn">Randomize</button>
           </div>
 
-          <div class="floating-card custom-drawer" id="customDrawer">
+          <div class="floating-card tab-content custom-drawer" id="customDrawer" data-tab="more">
             <div class="drawer-heading">
               <span class="control-label">Custom shape</span>
               <button id="clearCustomBtn" type="button">Reset</button>
@@ -146,6 +159,8 @@
             <canvas id="shapePad" width="180" height="180" aria-label="Custom shape drawing area"></canvas>
             <p>Draw a shape outline in this box. Release cursor to save.</p>
           </div>
+          <button id="resetDefaultsBtn" type="button" class="reset-btn">Reset defaults</button>
+          <div class="panel-handle"><span></span></div>
         </aside>
 
         <section class="stage-wrap" aria-label="Photo preview">

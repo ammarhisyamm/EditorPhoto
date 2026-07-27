@@ -763,6 +763,83 @@ emptyState.addEventListener("click", () => {
 
 window.addEventListener("resize", updatePreviewFit);
 
+/* ── Mobile tabs ─────────────────────────────── */
+document.querySelectorAll(".mobile-tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".mobile-tab").forEach((t) => {
+      t.classList.remove("active");
+      t.setAttribute("aria-selected", "false");
+    });
+    tab.classList.add("active");
+    tab.setAttribute("aria-selected", "true");
+    document.querySelectorAll(".controls .tab-content").forEach((tc) => {
+      tc.classList.toggle("active", tc.dataset.tab === tab.dataset.tab);
+    });
+  });
+});
+
+/* ── Presets ────────────────────────────────── */
+document.querySelectorAll(".preset-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const preset = btn.dataset.preset;
+    const presetMap = {
+      story: { format: "story", mode: "combo", count: 54, size: 92, opacity: 68, rotation: 0 },
+      square: { format: "square", mode: "stickers", count: 24, size: 60, opacity: 100, rotation: 35 },
+      portrait: { format: "portrait", mode: "stickers", count: 18, size: 70, opacity: 100, rotation: 35 },
+      wide: { format: "wide", mode: "cutout", count: 30, size: 80, opacity: 85, rotation: 20 },
+    };
+    const p = presetMap[preset];
+    if (!p) return;
+    setMode(p.mode);
+    formatSelect.value = p.format;
+    applyFormat(p.format);
+    controls.count.value = p.count;
+    controls.size.value = p.size;
+    controls.opacity.value = p.opacity;
+    controls.rotation.value = p.rotation;
+    paintAllSliders();
+    render();
+  });
+});
+
+/* ── Randomize ──────────────────────────────── */
+document.querySelector("#randomizeBtn")?.addEventListener("click", () => {
+  const rand = (min, max) => Math.round(min + Math.random() * (max - min));
+  controls.count.value = rand(8, 60);
+  controls.size.value = rand(30, 150);
+  controls.opacity.value = rand(30, 100);
+  controls.rotation.value = rand(0, 120);
+  controls.points.value = rand(4, 20);
+  controls.seed.value = rand(1, 99);
+  paintAllSliders();
+  render();
+});
+
+/* ── Reset defaults ─────────────────────────── */
+document.querySelector("#resetDefaultsBtn")?.addEventListener("click", () => {
+  setMode("stickers");
+  formatSelect.value = "portrait";
+  applyFormat("portrait");
+  imageFitSelect.value = "cover-center";
+  shapeSelect.value = "burst";
+  controls.count.value = 18;
+  controls.size.value = 70;
+  controls.opacity.value = 100;
+  controls.rotation.value = 35;
+  controls.points.value = 12;
+  controls.seed.value = 9;
+  shapeColor.value = "#ff4b00";
+  shapeHex.value = "#FF4B00";
+  backgroundColor.value = "#ff4b00";
+  backgroundHex.value = "#FF4B00";
+  shapeHex.classList.remove("invalid");
+  backgroundHex.classList.remove("invalid");
+  state.customPoints = [];
+  drawPadGuide();
+  paintAllSliders();
+  render();
+});
+
 /* ── Slider track fill ─────────────────────────────── */
 function paintSliderTrack(input) {
   const min = Number(input.min) || 0;
@@ -788,4 +865,12 @@ render();
 
 if (new URLSearchParams(window.location.search).get("demo") === "1") {
   loadDemoImage();
+}
+
+/* ── Init mobile tab on load ──────────────── */
+const initTab = document.querySelector(".mobile-tab.active");
+if (initTab) {
+  document.querySelectorAll(".controls .tab-content").forEach((tc) => {
+    tc.classList.toggle("active", tc.dataset.tab === initTab.dataset.tab);
+  });
 }
